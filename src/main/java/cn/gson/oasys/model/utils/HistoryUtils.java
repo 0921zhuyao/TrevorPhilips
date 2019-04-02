@@ -9,6 +9,13 @@ import cn.gson.oasys.common.constant.ZabbixAPIMethodConstant;
 import io.github.hengyunabc.zabbix.api.Request;
 import io.github.hengyunabc.zabbix.api.RequestBuilder;
 
+/**
+ * 历史记录工具类
+ * 
+ * @author TrevorPhilips
+ * @date 2019-04-01
+ */
+@SuppressWarnings("rawtypes")
 public class HistoryUtils {
 
 	/**

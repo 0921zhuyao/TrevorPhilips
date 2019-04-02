@@ -54,6 +54,7 @@ import cn.gson.oasys.model.entity.system.SystemTypeList;
 import cn.gson.oasys.model.entity.task.Taskuser;
 import cn.gson.oasys.model.entity.user.User;
 import cn.gson.oasys.model.entity.user.UserLog;
+import cn.gson.oasys.model.utils.ItemUtils;
 import cn.gson.oasys.services.daymanage.DaymanageServices;
 import cn.gson.oasys.services.inform.InformRelationService;
 import cn.gson.oasys.services.inform.InformService;
@@ -96,7 +97,7 @@ public class IndexController {
 	@Autowired
 	private MailreciverDao mdao;
 	@Autowired
-	private TaskuserDao  tadao;
+	private TaskuserDao tadao;
 	@Autowired
 	private RolepowerlistDao rdao;
 	@Autowired
@@ -107,34 +108,34 @@ public class IndexController {
 	private DaymanageDao daydao;
 	@Autowired
 	private InformRelationService informrelationservice;
-	
+
 	// 格式转化导入
 	DefaultConversionService service = new DefaultConversionService();
 
 	@RequestMapping("index")
-	public String index(HttpServletRequest req,Model model) {
+	public String index(HttpServletRequest req, Model model) {
 		HttpSession session = req.getSession();
-		if(StringUtils.isEmpty(session.getAttribute("userId"))){
+		if (StringUtils.isEmpty(session.getAttribute("userId"))) {
 			return "login/login";
 		}
 		Long userId = Long.parseLong(session.getAttribute("userId") + "");
-		User user=uDao.findOne(userId);
-		menuService.findMenuSys(req,user);
-		
+		User user = uDao.findOne(userId);
+		menuService.findMenuSys(req, user);
+
 		List<ScheduleList> aboutmenotice = dayser.aboutmeschedule(userId);
 		for (ScheduleList scheduleList : aboutmenotice) {
-			if(scheduleList.getIsreminded()!=null&&!scheduleList.getIsreminded()){
+			if (scheduleList.getIsreminded() != null && !scheduleList.getIsreminded()) {
 				System.out.println(scheduleList.getStartTime());
-				
-				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");//24小时制 
-//				simpleDateFormat.parse(scheduleList.getStartTime()).getTime();  
+
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");// 24小时制
+				// simpleDateFormat.parse(scheduleList.getStartTime()).getTime();
 				String start = simpleDateFormat.format(scheduleList.getStartTime());
 				String now = simpleDateFormat.format(new Date());
 				try {
 					long now2 = simpleDateFormat.parse(now).getTime();
-					long start2 = simpleDateFormat.parse(start).getTime();  
-					long cha = start2-now2;
-					if(0<cha && cha <86400000){
+					long start2 = simpleDateFormat.parse(start).getTime();
+					long cha = start2 - now2;
+					if (0 < cha && cha < 86400000) {
 						NoticesList remindnotices = new NoticesList();
 						remindnotices.setTypeId(11l);
 						remindnotices.setStatusId(15l);
@@ -142,11 +143,11 @@ public class IndexController {
 						remindnotices.setUrl("/daycalendar");
 						remindnotices.setUserId(userId);
 						remindnotices.setNoticeTime(new Date());
-						
+
 						NoticesList remindnoticeok = informService.save(remindnotices);
-						
+
 						informrelationservice.save(new NoticeUserRelation(remindnoticeok, user, false));
-						
+
 						scheduleList.setIsreminded(true);
 						daydao.save(scheduleList);
 					}
@@ -156,51 +157,55 @@ public class IndexController {
 				}
 			}
 		}
-		
-		List<NoticeUserRelation> notice=irdao.findByReadAndUserId(false,user);//通知
-		List<Mailreciver> mail=mdao.findByReadAndDelAndReciverId(false, false, user);//邮件
-		List<Taskuser>  task=tadao.findByUserIdAndStatusId(user, 3);//新任务
+
+		List<NoticeUserRelation> notice = irdao.findByReadAndUserId(false, user);// 通知
+		List<Mailreciver> mail = mdao.findByReadAndDelAndReciverId(false, false, user);// 邮件
+		List<Taskuser> task = tadao.findByUserIdAndStatusId(user, 3);// 新任务
 		model.addAttribute("notice", notice.size());
 		model.addAttribute("mail", mail.size());
 		model.addAttribute("task", task.size());
 		model.addAttribute("user", user);
-		//展示用户操作记录 由于现在没有登陆 不能获取用户id
-		List<UserLog> userLogs=userLogDao.findByUser(userId);
+		// 展示用户操作记录 由于现在没有登陆 不能获取用户id
+		List<UserLog> userLogs = userLogDao.findByUser(userId);
 		req.setAttribute("userLogList", userLogs);
 		return "index/index";
 	}
+
 	/**
 	 * 菜单查找
+	 * 
 	 * @param userId
 	 * @param req
 	 * @return
 	 */
 	@RequestMapping("menucha")
-	public String menucha(HttpSession session, Model model,HttpServletRequest req){
+	public String menucha(HttpSession session, Model model, HttpServletRequest req) {
 		Long userId = Long.parseLong(session.getAttribute("userId") + "");
-		User user=uDao.findOne(userId);
-		String val=null;
-		if(!StringUtils.isEmpty(req.getParameter("val"))){
-			val=req.getParameter("val");
+		User user = uDao.findOne(userId);
+		String val = null;
+		if (!StringUtils.isEmpty(req.getParameter("val"))) {
+			val = req.getParameter("val");
 		}
-		if(!StringUtils.isEmpty(val)){
-			List<Rolemenu> oneMenuAll=rdao.findname(0L, user.getRole().getRoleId(), true, true, val);//找父菜单
-			List<Rolemenu> twoMenuAll=null;
+		if (!StringUtils.isEmpty(val)) {
+			List<Rolemenu> oneMenuAll = rdao.findname(0L, user.getRole().getRoleId(), true, true, val);// 找父菜单
+			List<Rolemenu> twoMenuAll = null;
 			for (int i = 0; i < oneMenuAll.size(); i++) {
-				twoMenuAll=rdao.findbyparentxianall(oneMenuAll.get(i).getMenuId(), user.getRole().getRoleId(), true, true);//找子菜单
+				twoMenuAll = rdao.findbyparentxianall(oneMenuAll.get(i).getMenuId(), user.getRole().getRoleId(), true,
+						true);// 找子菜单
 			}
 			req.setAttribute("oneMenuAll", oneMenuAll);
 			req.setAttribute("twoMenuAll", twoMenuAll);
-		}else{
-			menuService.findMenuSys(req,user);
+		} else {
+			menuService.findMenuSys(req, user);
 		}
-	
+
 		return "common/leftlists";
-		
+
 	}
+
 	@RequestMapping("userlogs")
-	public String usreLog(@SessionAttribute("userId") Long userId,HttpServletRequest req){
-		List<UserLog> userLogs=userLogDao.findByUser(userId);
+	public String usreLog(@SessionAttribute("userId") Long userId, HttpServletRequest req) {
+		List<UserLog> userLogs = userLogDao.findByUser(userId);
 		req.setAttribute("userLogList", userLogs);
 		return "user/userlog";
 	}
@@ -217,8 +222,6 @@ public class IndexController {
 		}
 		model.addAttribute("alist", aList);
 	}
-	
-	
 
 	/**
 	 * 控制面板主页
@@ -230,13 +233,13 @@ public class IndexController {
 	@RequestMapping("test2")
 	public String test2(HttpSession session, Model model, HttpServletRequest request) {
 		Long userId = Long.parseLong(session.getAttribute("userId") + "");
-		User user=uDao.findOne(userId);
+		User user = uDao.findOne(userId);
 		request.setAttribute("user", user);
-		//计算三个模块的记录条数
+		// 计算三个模块的记录条数
 		request.setAttribute("filenum", filedao.count());
 		request.setAttribute("directornum", directorDao.count());
 		request.setAttribute("discussnum", discussDao.count());
-		
+
 		List<Map<String, Object>> list = nm.findMyNoticeLimit(userId);
 		model.addAttribute("user", user);
 		for (Map<String, Object> map : list) {
@@ -249,30 +252,29 @@ public class IndexController {
 		// List<Map<String, Object>>
 		// noticeList=informRService.setList(noticeList1);
 		showalist(model, userId);
-		System.out.println("通知"+list);
+		System.out.println("通知" + list);
 		model.addAttribute("noticeList", list);
-		
-		
-		//列举计划
-		List<Plan> plans=planDao.findByUserlimit(userId);
+
+		// 列举计划
+		List<Plan> plans = planDao.findByUserlimit(userId);
 		model.addAttribute("planList", plans);
 		List<SystemTypeList> ptype = (List<SystemTypeList>) typeDao.findByTypeModel("aoa_plan_list");
 		List<SystemStatusList> pstatus = (List<SystemStatusList>) statusDao.findByStatusModel("aoa_plan_list");
 		model.addAttribute("ptypelist", ptype);
 		model.addAttribute("pstatuslist", pstatus);
-		
-		//列举便签
-		List<Notepaper> notepapers=notepaperDao.findByUserIdOrderByCreateTimeDesc(userId);
+
+		// 列举便签
+		List<Notepaper> notepapers = notepaperDao.findByUserIdOrderByCreateTimeDesc(userId);
 		model.addAttribute("notepaperList", notepapers);
-		
-		//列举几个流程记录
-		List<ProcessList> pList=processListDao.findlastthree(userId);
+
+		// 列举几个流程记录
+		List<ProcessList> pList = processListDao.findlastthree(userId);
 		model.addAttribute("processlist", pList);
 		List<SystemStatusList> processstatus = (List<SystemStatusList>) statusDao.findByStatusModel("aoa_process_list");
 		model.addAttribute("prostatuslist", processstatus);
 		return "systemcontrol/control";
 	}
-	
+
 	@RequestMapping("test3")
 	public String test3() {
 		return "note/noteview";
@@ -317,7 +319,11 @@ public class IndexController {
 		System.out.println(info);
 		return info;
 	}
-	
-	
+
+	@RequestMapping("getData")
+	@ResponseBody
+	public List<Map> getData() {
+		return ItemUtils.getItem();
+	}
 
 }

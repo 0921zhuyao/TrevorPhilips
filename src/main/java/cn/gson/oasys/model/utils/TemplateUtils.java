@@ -9,6 +9,13 @@ import cn.gson.oasys.common.constant.ZabbixAPIMethodConstant;
 import io.github.hengyunabc.zabbix.api.Request;
 import io.github.hengyunabc.zabbix.api.RequestBuilder;
 
+/**
+ * 模板工具类
+ * 
+ * @author TrevorPhilips
+ * @date 2019-04-01
+ */
+@SuppressWarnings("rawtypes")
 public class TemplateUtils {
 
 	/**
@@ -20,7 +27,6 @@ public class TemplateUtils {
 		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.TEMPLATE_GET)
 				.paramEntry("output", "extend").build();
 		List<Map> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), Map.class);
-		System.out.println(ZabbixUtils.zabbixRequest(request));
 		return maps;
 	}
 

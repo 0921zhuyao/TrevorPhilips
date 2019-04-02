@@ -1,7 +1,5 @@
 package cn.gson.oasys.model.utils;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.util.StringUtils;
@@ -10,7 +8,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import cn.gson.oasys.common.constant.ZabbixAPIMethodConstant;
-import cn.gson.oasys.model.entity.zabbix.HostEntity;
 import io.github.hengyunabc.zabbix.api.DefaultZabbixApi;
 import io.github.hengyunabc.zabbix.api.Request;
 import io.github.hengyunabc.zabbix.api.RequestBuilder;
@@ -59,106 +56,10 @@ public class ZabbixUtils {
 		return null;
 	}
 
-	/**
-	 * 获取所有主机信息
-	 * 
-	 * @return
-	 */
-	public static List<HostEntity> getHost() {
-		RequestBuilder requestBuilder = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.HOST_GET);
-		Request request = requestBuilder.paramEntry("output", "extend").build();
-		List<HostEntity> hostEntities = JSONArray.parseArray(zabbixRequest(request), HostEntity.class);
-		return hostEntities;
-	}
-
-	/**
-	 * 根据入参筛选主机信息
-	 * 
-	 * @param jsonObject
-	 * @return
-	 */
-	public static List<HostEntity> getHost(Map<String, Object> paramsMap) {
-		Request request = queryParams(paramsMap, ZabbixAPIMethodConstant.HOST_GET);
-		List<HostEntity> hostEntities = JSONArray.parseArray(zabbixRequest(request), HostEntity.class);
-		return hostEntities;
-	}
-
 	public static String getHostGroup() {
 		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.HOST_GROUP_GET)
 				.paramEntry("output", "extend").build();
 		return zabbixRequest(request);
-	}
-
-	/**
-	 * 获取所有监控项信息
-	 * 
-	 * @return
-	 */
-	public static List<Map> getItem() {
-		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.ITEM_GET)
-				.paramEntry("output", "extend").build();
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		System.out.println(zabbixRequest(request));
-		return maps;
-	}
-
-	/**
-	 * 根据入参筛选监控项信息
-	 */
-	public static List<Map> getItem(Map<String, Object> paramsMap) {
-		Request request = queryParams(paramsMap, ZabbixAPIMethodConstant.ITEM_GET);
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		System.out.println(zabbixRequest(request));
-		return maps;
-	}
-
-	/**
-	 * 获取所有模板
-	 * 
-	 * @return
-	 */
-	public static List<Map> getTemplate() {
-		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.TEMPLATE_GET)
-				.paramEntry("output", "extend").build();
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		System.out.println(zabbixRequest(request));
-		return maps;
-	}
-
-	/**
-	 * 根据入参筛选模板信息
-	 * 
-	 * @param paramsMap
-	 * @return
-	 */
-	public static List<Map> getTemplate(Map<String, Object> paramsMap) {
-		Request request = queryParams(paramsMap, ZabbixAPIMethodConstant.TEMPLATE_GET);
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		return maps;
-	}
-
-	/**
-	 * 获取所有历史记录
-	 * 
-	 * @return
-	 */
-	public static List<Map> getHistory() {
-		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.HISTORY_GET)
-				.paramEntry("output", "extend").build();
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		return maps;
-	}
-
-	/**
-	 * 根据入参筛选历史记录
-	 * 
-	 * @param paramsMap
-	 * @return
-	 */
-	public static List<Map> getHistory(Map<String, Object> paramsMap) {
-		Request request = queryParams(paramsMap, ZabbixAPIMethodConstant.HISTORY_GET);
-		List<Map> maps = JSONArray.parseArray(zabbixRequest(request), Map.class);
-		return maps;
 	}
 
 	public static String getProblem() {
@@ -225,15 +126,4 @@ public class ZabbixUtils {
 		return request;
 	}
 
-	public static void main(String[] args) {
-		Map<String, Object> map = new HashMap<>();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("name", "物理服务器模板（Linux）");
-		map.put("itemids", "28634");
-		map.put("sortfield", "clock");
-		map.put("sortorder", "DESC");
-		map.put("limit", 1);
-		System.out.println("zabbix的json字符串: " + getHistory(map));
-		System.out.println("zabbix的json字符串1: " + getHistory(map));
-	}
 }
