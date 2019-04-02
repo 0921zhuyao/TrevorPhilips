@@ -54,6 +54,7 @@ import cn.gson.oasys.model.entity.system.SystemTypeList;
 import cn.gson.oasys.model.entity.task.Taskuser;
 import cn.gson.oasys.model.entity.user.User;
 import cn.gson.oasys.model.entity.user.UserLog;
+import cn.gson.oasys.model.entity.zabbix.ItemEntity;
 import cn.gson.oasys.model.utils.ItemUtils;
 import cn.gson.oasys.services.daymanage.DaymanageServices;
 import cn.gson.oasys.services.inform.InformRelationService;
@@ -322,7 +323,7 @@ public class IndexController {
 
 	@RequestMapping("getData")
 	@ResponseBody
-	public List<Map> getData() {
+	public List<ItemEntity> getData() {
 		return ItemUtils.getItem();
 	}
 

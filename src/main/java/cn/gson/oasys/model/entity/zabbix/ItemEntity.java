@@ -12,130 +12,151 @@ public class ItemEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String itemid;//
+	private String itemid;// 监控项ID
 
-	private String delay;//
+	private String delay;// 更新监控项的时间间隔
 
-	private String hostid;
+	private String hostid;// 该监控项所属的主机 ID
 
-	private String interfaceid;
+	private String interfaceid;// 监控项主机接口的ID。 仅用于主机项
 
-	private String key_;
+	private String key_;// 监控项键值
 
-	private String name;
-
+	private String name;// 监控项名称
+	// 0-Zabbix agent;1-SNMPv1 agent;2-Zabbix trapper;3-simple check;
+	// 4-SNMPv2 agent;5 - Zabbix internal;6 - SNMPv3 agent;
+	// 7 - Zabbix agent (active);8 - Zabbix aggregate;
+	// 9 - web item;10 - external check;11 - database monitor;
+	// 12 - IPMI agent;13 - SSH agent;14 - TELNET agent;
+	// 15 - calculated;16 - JMX agent;17 - SNMP trap;
+	// 18 - Dependent item;19 - HTTP agent;
 	private int type;
 
-	private String url;
+	private String url;// URL字符串，仅HTTP agent监控项类型需要
 
+	// 监控项信息的类型0 - numeric float;1 - character;2 - log;
+	// 3 - numeric unsigned;4 - text
 	private int value_type;
 
+	// HTTP agent监控项字段。允许和trapper监控项一样的填充值
 	private int allow_traps;
 
+	// 仅在SSH agent items or HTTP agent items中使用
 	private int authtype;
 
-	private String description;
+	private String description;// 监控项说明
 
-	private String error;
+	private String error;// 当更新监控项出错时的错误文本
 
 	private int flags;
 
-	private int follow_redirects;
+	private int follow_redirects;// HTTP agent 监控项字段。合并数据时跟随重定向
 
+	// HTTP agent 监控项字段。带有HTTP(S)请求报头的对象，报头名为键名，报头值为值
 	private Object headers;
 
-	private String history;
+	private String history;// 一个历史数据被保存的时长的时间单位
 
-	private String http_proxy;
+	private String http_proxy;// HTTP agent 监控项字段。HTTP(S)代理连接字符串
 
-	private int inventory_link;
+	private int inventory_link;// 监控项填充的主机资产的ID
 
-	private String ipmi_sensor;
+	private String ipmi_sensor;// IPMI传感器。仅用于IPMI监控项
 
-	private String jmx_endpoint;
+	private String jmx_endpoint;// JMX agent自定义的连接字符串
 
-	private long lastclock;
+	private long lastclock;// 监控项最后被更新的时间
 
-	private int lastns;
+	private int lastns;// 监控项最后被更新的纳秒
 
-	private String lastvalue;
+	private String lastvalue;// 监控项最新的值
 
-	private String logtimefmt;
+	private String logtimefmt;// 日志条目的时间格式。仅用于日志监控项
 
 	private int master_itemid;
 
-	private long mtime;
+	private long mtime;// 被监控的日志文件最后一次被更新的时间
 
-	private int output_format;
+	private int output_format;// HTTP agent监控项字段
 
-	private String params;
+	private String params;// 取决于监控项类型的附加参数
 
-	private String password;
+	private String password;// 认证的密码
 
-	private String port;
+	private String port;// 监控项监控的端口。仅用于SMNP监控项
 
+	// HTTP agent字段0 - (default) Raw data;2 - JSON data.3 - XML data
 	private int post_type;
 
-	private String posts;
+	private String posts;// HTTP agent字段。HTTP(S)请求报文。仅用于post_type
 
-	private String prevvalue;
+	private String prevvalue;// 监控项的前一个值
 
-	private String privatekey;
+	private String privatekey;// 私钥文件名
 
-	private String publickey;
+	private String publickey;// 公钥的文件名
 
-	private String[] query_fields;
+	private String[] query_fields;// HTTP agent监控项字段。查询参数。带有键值对的数组对象，值可为空
 
+	// HTTP agent监控项字段。请求方法的类型0 - GET;1 - (default) POST;2 - PUT;3 - HEAD
 	private int request_method;
 
+	// HTTP agent监控项字段。被存储的响应的部分
 	private int retrieve_mode;
 
-	private String snmp_community;
+	private String snmp_community;// 仅用于SNMPv1 and SNMPv2 监控项
 
 	private String snmp_oid;
 
-	private String snmpv3_authpassphrase;
+	private String snmpv3_authpassphrase;// SNMPv3认证密码。仅用于SNMPv3监控项
 
+	// SNMPv3认证协议。仅用于SNMPv3监控项;0 - (default) MD5;1 - SHA
 	private int snmpv3_authprotocol;
 
-	private String snmpv3_contextname;
+	private String snmpv3_contextname;// SNMPv3文本名称。仅用于SNMPv3监控项
 
-	private String snmpv3_privpassphrase;
+	private String snmpv3_privpassphrase;// SNMPv3私钥。仅用于SNMPv3监控项
 
+	// SNMPv3文私密协议。仅用于SNMPv3监控项0 - (default) DES;1 - AES
 	private int snmpv3_privprotocol;
 
+	// SNMPv3安全等级。仅用于SNMPv3监控项0 - noAuthNoPriv;1 - authNoPriv;2 - authPriv
 	private int snmpv3_securitylevel;
 
+	// SNMPv3安全名称。仅用于SNMPv3监控项
 	private String snmpv3_securityname;
 
-	private String ssl_cert_file;
+	private String ssl_cert_file;// HTTP agent监控项字段。公共SSL 秘钥的文件路径
 
-	private String ssl_key_file;
+	private String ssl_key_file;// HTTP agent监控项字段。私有SLL秘钥的文件路径
 
-	private String ssl_key_password;
+	private String ssl_key_password;// HTTP agent监控项字段。SSL 秘钥的文件密码
 
-	private int state;
+	private int state;// 0 - (default) normal;1 - not supported
 
-	private int status;
+	private int status;// 0 - (default) enabled item;1 - disabled item.
 
-	private String status_codes;
+	private String status_codes;// HTTP agent监控项字段。以逗号分隔的HTTP 状态码的范围
 
-	private String templateid;
+	private String templateid;// 父模板的ID
 
-	private String timeout;
+	private String timeout;// HTTP agent监控项字段。监控项数据轮询超时时间
 
-	private String trapper_hosts;
+	private String trapper_hosts;// 接受的主机。仅用于trapper监控项或者HTTP agent监控项
 
-	private String trends;
+	private String trends;// 时间单位，数据数据被保存的时间长度
 
-	private String units;
+	private String units;// 值的单位
 
-	private String username;
+	private String username;// 认证的用户名
 
-	private String valuemapid;
+	private String valuemapid;// 关联映射值的ID
 
+	// HTTP agent字段。验证URL中的主机名处于通用名称字段或主机证书的主题备用名称字段
+	// 0 - (default) Do not validate;1 - Validate
 	private int verify_host;
 
+	// HTTP agent字段。验证主机的合法性0 - (default) Do not validate;1 - Validate
 	private int verify_peer;
 
 	public String getItemid() {

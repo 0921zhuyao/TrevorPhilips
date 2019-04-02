@@ -1,13 +1,12 @@
 package cn.gson.oasys.model.utils;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 
 import cn.gson.oasys.common.constant.ZabbixAPIMethodConstant;
+import cn.gson.oasys.model.entity.zabbix.ItemEntity;
 import io.github.hengyunabc.zabbix.api.Request;
 import io.github.hengyunabc.zabbix.api.RequestBuilder;
 
@@ -25,29 +24,20 @@ public class ItemUtils {
 	 * 
 	 * @return
 	 */
-	public static List<Map> getItem() {
+	public static List<ItemEntity> getItem() {
 		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.ITEM_GET)
 				.paramEntry("output", "extend").build();
-		List<Map> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), Map.class);
+		List<ItemEntity> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), ItemEntity.class);
 		return maps;
 	}
 
 	/**
 	 * 根据入参筛选监控项信息
 	 */
-	public static List<Map> getItem(Map<String, Object> paramsMap) {
+	public static List<ItemEntity> getItem(Map<String, Object> paramsMap) {
 		Request request = ZabbixUtils.queryParams(paramsMap, ZabbixAPIMethodConstant.ITEM_GET);
-		List<Map> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), Map.class);
+		List<ItemEntity> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), ItemEntity.class);
 		return maps;
 	}
 
-	public static void main(String[] args) {
-		Map<String, Object> map = new HashMap<>();
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("name", "物理服务器模板（Linux）");
-		map.put("sortfield", "clock");
-		map.put("sortorder", "DESC");
-		map.put("limit", 10);
-		System.out.println("zabbix的json字符串: " + getItem());
-	}
 }
