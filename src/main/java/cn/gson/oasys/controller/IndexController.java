@@ -3,6 +3,7 @@ package cn.gson.oasys.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -54,7 +55,6 @@ import cn.gson.oasys.model.entity.system.SystemTypeList;
 import cn.gson.oasys.model.entity.task.Taskuser;
 import cn.gson.oasys.model.entity.user.User;
 import cn.gson.oasys.model.entity.user.UserLog;
-import cn.gson.oasys.model.entity.zabbix.ItemEntity;
 import cn.gson.oasys.model.utils.ItemUtils;
 import cn.gson.oasys.services.daymanage.DaymanageServices;
 import cn.gson.oasys.services.inform.InformRelationService;
@@ -323,8 +323,11 @@ public class IndexController {
 
 	@RequestMapping("getData")
 	@ResponseBody
-	public List<ItemEntity> getData() {
-		return ItemUtils.getItem();
+	public List<Map> getData() {
+		Map<String, Object> map = new HashMap<>();
+		map.put("output", new String[] { "itemid", "hostid", "key_", "name" });
+		map.put("itemids", "10009");
+		return ItemUtils.getItem(map);
 	}
 
 }

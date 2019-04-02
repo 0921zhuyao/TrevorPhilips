@@ -6,7 +6,6 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONArray;
 
 import cn.gson.oasys.common.constant.ZabbixAPIMethodConstant;
-import cn.gson.oasys.model.entity.zabbix.ItemEntity;
 import io.github.hengyunabc.zabbix.api.Request;
 import io.github.hengyunabc.zabbix.api.RequestBuilder;
 
@@ -24,19 +23,19 @@ public class ItemUtils {
 	 * 
 	 * @return
 	 */
-	public static List<ItemEntity> getItem() {
+	public static List<Map> getItem() {
 		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.ITEM_GET)
 				.paramEntry("output", "extend").build();
-		List<ItemEntity> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), ItemEntity.class);
+		List<Map> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), Map.class);
 		return maps;
 	}
 
 	/**
 	 * 根据入参筛选监控项信息
 	 */
-	public static List<ItemEntity> getItem(Map<String, Object> paramsMap) {
+	public static List<Map> getItem(Map<String, Object> paramsMap) {
 		Request request = ZabbixUtils.queryParams(paramsMap, ZabbixAPIMethodConstant.ITEM_GET);
-		List<ItemEntity> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), ItemEntity.class);
+		List<Map> maps = JSONArray.parseArray(ZabbixUtils.zabbixRequest(request), Map.class);
 		return maps;
 	}
 
