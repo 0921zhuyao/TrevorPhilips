@@ -31,4 +31,9 @@ public class ZabbixAPIMethodConstant {
 	public static String HISTORY_GET = "history.get";
 
 	public static String PROBLEM_GET = "problem.get";
+
+	/**
+	 * 主机接口
+	 */
+	public static String HOST_INTERFACE_GET = "hostinterface.get";
 }

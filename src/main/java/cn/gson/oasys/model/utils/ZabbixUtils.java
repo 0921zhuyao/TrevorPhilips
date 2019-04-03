@@ -16,12 +16,11 @@ public class ZabbixUtils {
 
 	private static DefaultZabbixApi zabbixApi;
 
-	// 同步代码快的demo加锁，安全高效
 	public static DefaultZabbixApi zabbixInit() {
 		if (zabbixApi == null) {
 			synchronized (DefaultZabbixApi.class) {
 				if (zabbixApi == null) {
-					zabbixApi = new DefaultZabbixApi("http://192.168.75.156/zabbix/api_jsonrpc.php");
+					zabbixApi = new DefaultZabbixApi("http://192.168.1.106:8080/zabbix/api_jsonrpc.php");
 					// init方法中创建CloseableHttpClient客户端
 					zabbixApi.init();
 					// 进行权限验证
@@ -57,14 +56,12 @@ public class ZabbixUtils {
 	}
 
 	public static String getHostGroup() {
-		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.HOST_GROUP_GET)
-				.paramEntry("output", "extend").build();
+		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.HOST_GROUP_GET).paramEntry("output", "extend").build();
 		return zabbixRequest(request);
 	}
 
 	public static String getProblem() {
-		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.PROBLEM_GET)
-				.paramEntry("output", "extend").build();
+		Request request = RequestBuilder.newBuilder().method(ZabbixAPIMethodConstant.PROBLEM_GET).paramEntry("output", "extend").build();
 		return zabbixRequest(request);
 	}
 

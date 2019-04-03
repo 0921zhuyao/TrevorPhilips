@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 
@@ -55,7 +56,7 @@ import cn.gson.oasys.model.entity.system.SystemTypeList;
 import cn.gson.oasys.model.entity.task.Taskuser;
 import cn.gson.oasys.model.entity.user.User;
 import cn.gson.oasys.model.entity.user.UserLog;
-import cn.gson.oasys.model.utils.ItemUtils;
+import cn.gson.oasys.model.utils.HostInterfaceUtils;
 import cn.gson.oasys.services.daymanage.DaymanageServices;
 import cn.gson.oasys.services.inform.InformRelationService;
 import cn.gson.oasys.services.inform.InformService;
@@ -191,8 +192,7 @@ public class IndexController {
 			List<Rolemenu> oneMenuAll = rdao.findname(0L, user.getRole().getRoleId(), true, true, val);// 找父菜单
 			List<Rolemenu> twoMenuAll = null;
 			for (int i = 0; i < oneMenuAll.size(); i++) {
-				twoMenuAll = rdao.findbyparentxianall(oneMenuAll.get(i).getMenuId(), user.getRole().getRoleId(), true,
-						true);// 找子菜单
+				twoMenuAll = rdao.findbyparentxianall(oneMenuAll.get(i).getMenuId(), user.getRole().getRoleId(), true, true);// 找子菜单
 			}
 			req.setAttribute("oneMenuAll", oneMenuAll);
 			req.setAttribute("twoMenuAll", twoMenuAll);
@@ -321,13 +321,18 @@ public class IndexController {
 		return info;
 	}
 
+	@SuppressWarnings("rawtypes")
 	@RequestMapping("getData")
 	@ResponseBody
 	public List<Map> getData() {
 		Map<String, Object> map = new HashMap<>();
-		map.put("output", new String[] { "itemid", "hostid", "key_", "name" });
-		map.put("itemids", "10009");
-		return ItemUtils.getItem(map);
+		// map.put("output", new String[] { "itemid", "hostid", "key_","name"});
+		// map.put("itemids", "10009");
+		// map.put("limit", 10);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("ip", "192.168.1.106");
+		map.put("filter", jsonObject);
+		return HostInterfaceUtils.getHostInterface(map);
 	}
 
 }
